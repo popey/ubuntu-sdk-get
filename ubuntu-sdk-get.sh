@@ -39,8 +39,16 @@ echo 'LC_ALL="en_GB.UTF-8"' >> /etc/default/locale
 /usr/bin/apt-get install -y --force-yes ubuntu-sdk
 exit 0
 EOF
+mount -o bind /dev $target/dev
+mount -o bind /proc $target/proc
+mount -o bind /sys $target/sys
+
 chmod +x $target/tmp/script.sh
 chroot $target /tmp/script.sh
+
+umount -l $target/sys
+umount -l $target/proc
+umount -l $target/dev
 
 echo The following command will launch the Ubuntu SDK
 echo sudo chroot $target su - $user -c "qtcreator"
