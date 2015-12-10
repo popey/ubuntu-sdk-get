@@ -15,22 +15,29 @@ debootstrap --include $includes \
             $mirror
 if [ "$?" == "0" ]; then
   echo "Successfully made chroot."
+
 cat << EOF > $target/etc/apt/sources.list
 deb $mirror $release main restricted universe multiverse
 deb $mirror $release-updates main restricted universe multiverse
 deb-src $mirror $release main restricted universe multiverse
 deb-src $mirror $release-updates main restricted universe multiverse
 EOF
+
 cat << EOF > $target/tmp/script.sh
 #!/bin/bash
-useradd -s /bin/bash -m $user
-add-apt-repository -y ppa:ubuntu-sdk-team/ppa
-apt-get update
-apt-get install -y ubuntu-sdk
+# Needed for Arch (and perhaps others)
+/usr/sbin/groupadd -g 19 log
+/usr/sbin/useradd -s /bin/bash -m $user
+/usr/bin/add-apt-repository -y ppa:ubuntu-sdk-team/ppa
+/usr/bin/apt-get update
+/usr/bin/apt-get install -y ubuntu-sdk
 exit 0
 EOF
 chmod +x $target/tmp/script.sh
 chroot $target /tmp/script.sh
+
+echo The following command will launch the Ubuntu SDK
+echo sudo chroot $target su - $user -c "qtcreator"
 else
   echo "Creating chroot failed."
 fi
