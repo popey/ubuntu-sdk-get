@@ -36,7 +36,7 @@ echo 'LC_ALL="en_GB.UTF-8"' >> /etc/default/locale
 /usr/sbin/useradd -s /bin/bash -m $user
 /usr/bin/add-apt-repository -y ppa:ubuntu-sdk-team/ppa
 /usr/bin/apt-get update
-/usr/bin/apt-get install -y ubuntu-sdk
+/usr/bin/apt-get install -y --force--yes ubuntu-sdk
 exit 0
 EOF
 chmod +x $target/tmp/script.sh
